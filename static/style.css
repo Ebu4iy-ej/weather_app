@@ -102,10 +102,12 @@ button:hover {
     .weather-container {
         padding: 10px;
         gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
     }
 
     .weather-card {
-        width: 100%; /* Карточки будут идти одна под другой, а не в ряд */
+        flex: 0 0 45%; /* Карточки будут идти одна под другой, а не в ряд */
         box-sizing: border-box;
     }
 }
