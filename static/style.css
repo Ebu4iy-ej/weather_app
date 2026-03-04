@@ -94,18 +94,17 @@ button:hover {
 
 /* Правила только для экранов меньше 600px (телефоны) */
 @media (max-width: 600px) {
-    .search-section input[type="text"] {
-        width: 80%; /* Растягиваем поиск почти на весь экран */
-        margin-bottom: 10px;
-    }
+    /* ... код для поиска оставляем ... */
 
     .weather-container {
-        padding: 10px;
-        gap: 10px;
+        padding: 15px;
+        gap: 10px; /* Небольшой отступ между карточками */
+        justify-content: center; /* Центрируем их */
     }
 
     .weather-card {
-        width: 100%; /* Карточки будут идти одна под другой, а не в ряд */
-        box-sizing: border-box;
+        width: calc(50% - 15px); /* Магия: 50% ширины минус половина отступа */
+        min-width: 140px; /* Чтобы они не становились слишком узкими */
+        padding: 15px 10px;
     }
 }
