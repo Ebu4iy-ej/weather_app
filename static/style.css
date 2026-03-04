@@ -91,3 +91,21 @@ button:hover {
     min-width: 140px;
     text-align: center;
 }
+
+/* Правила только для экранов меньше 600px (телефоны) */
+@media (max-width: 600px) {
+    .search-section input[type="text"] {
+        width: 80%; /* Растягиваем поиск почти на весь экран */
+        margin-bottom: 10px;
+    }
+
+    .weather-container {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .weather-card {
+        width: 100%; /* Карточки будут идти одна под другой, а не в ряд */
+        box-sizing: border-box;
+    }
+}
