@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Погодный Дашборд</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-{{ weather['main'] if weather else 'Default' }}">
+
+    <div style="margin-top: 50px; text-align: center;">
+        <h1>Узнать погоду 🌤️</h1>
+        <form method="POST">
+            <input type="text" name="city" placeholder="Напр: Москва">
+            <button type="submit">Поиск</button>
+        </form>
+    </div>
+
+    {% if weather %}
+    <h2 style="margin-top: 30px;">Погода в {{ weather['city'] }}</h2>
+    
+    <div class="weather-container">
+        <div class="weather-card">
+            <div style="font-size: 30px;">🌡️</div>
+            <h3>Темп.</h3>
+            <p>{{ weather['temp'] }}°C</p>
+        </div>
+
+        <div class="weather-card">
+            <div style="font-size: 30px;">🤔</div>
+            <h3>Ощущается</h3>
+            <p>{{ weather['feels_like'] }}°C</p>
+        </div>
+
+        <div class="weather-card">
+            <div style="font-size: 30px;">☁️</div>
+            <h3>На улице</h3>
+            <p>{{ weather['desc'] }}</p>
+        </div>
+
+        <div class="weather-card">
+            <div style="font-size: 30px;">💧</div>
+            <h3>Влажность</h3>
+            <p>{{ weather['humidity'] }}%</p>
+        </div>
+
+        <div class="weather-card">
+            <div style="font-size: 30px;">💨</div>
+            <h3>Ветер</h3>
+            <p>{{ weather['wind_speed'] }} м/с</p>
+        </div>
+    </div>
+    <h2 style="margin-top: 40px;">Прогноз на 5 дней</h2>
+<div class="weather-container">
+    {% for day in weather_forecast %}
+        <div class="weather-card">
+            <div style="font-weight: bold; margin-bottom: 10px;">
+                {{ day['date'][:10] }} </div>
+            <div style="font-size: 25px;">📅</div>
+            <p>{{ day['temp'] }}°C</p>
+            <p style="font-size: 0.9em; opacity: 0.8;">{{ day['desc'] }}</p>
+        </div>
+    {% endfor %}
+    {% if weather['main'] == 'Rain' %}
+    <div class="rain-drop" style="left: 10%;"></div>
+    <div class="rain-drop" style="left: 30%;"></div>
+    {% endif %}
+</div>
+{% endif %}
+
+</body>
+</html>
