@@ -1,8 +1,13 @@
 import requests
 
-def get_weather(city):
+def get_weather(city = None, lat=None, lon=None):
     api_key = '1679f5ca7ac79ae9838dc130c6e24a43'
-    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=ru'
+    if lat and lon:
+        # Если есть координаты, строим ссылку по ним
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric&lang=ru"
+    else:
+        # Иначе ищем по названию города
+        url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=ru'
 
     response = requests.get(url)
     data = response.json()
