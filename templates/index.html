@@ -11,62 +11,105 @@
     <div style="margin-top: 50px; text-align: center;">
         <h1>Узнать погоду 🌤️</h1>
         <form method="POST">
-            <input type="text" name="city" placeholder="Напр: Москва">
+            <input type="text" name="city" placeholder="Например: Москва">
             <button type="submit">Поиск</button>
+            <button type="button" id="get-location" class="location-btn"> 📍 Где я</button>
         </form>
     </div>
 
-    {% if weather %}
-    <h2 style="margin-top: 30px;">Погода в {{ weather['city'] }}</h2>
-    
+    <h2 id="city-name" style="margin-top: 30px; text-align: center;">
+        {% if weather %}Погода в {{ weather['city'] }}{% else %}Узнайте погоду в вашем городе{% endif %}
+    </h2>
+
     <div class="weather-container">
         <div class="weather-card">
             <div style="font-size: 30px;">🌡️</div>
             <h3>Темп.</h3>
-            <p>{{ weather['temp'] }}°C</p>
+            <p id="temp-value">{{ weather['temp'] if weather else '--' }}°C</p>
         </div>
 
         <div class="weather-card">
             <div style="font-size: 30px;">🤔</div>
             <h3>Ощущается</h3>
-            <p>{{ weather['feels_like'] }}°C</p>
+            <p id="feels-like-value">{{ weather['feels_like'] if weather else '--' }}°C</p>
         </div>
 
         <div class="weather-card">
             <div style="font-size: 30px;">☁️</div>
             <h3>На улице</h3>
-            <p>{{ weather['desc'] }}</p>
+            <p id="weather-desc">{{ weather['desc'] if weather else 'Нажмите поиск' }}</p>
         </div>
 
         <div class="weather-card">
             <div style="font-size: 30px;">💧</div>
             <h3>Влажность</h3>
-            <p>{{ weather['humidity'] }}%</p>
+            <p id="humidity-value">{{ weather['humidity'] if weather else '--' }}%</p>
         </div>
 
         <div class="weather-card">
             <div style="font-size: 30px;">💨</div>
             <h3>Ветер</h3>
-            <p>{{ weather['wind_speed'] }} м/с</p>
+            <p id="wind-value">{{ weather['wind_speed'] if weather else '--' }} м/с</p>
         </div>
     </div>
-    <h2 style="margin-top: 40px;">Прогноз на 5 дней</h2>
-<div class="weather-container">
-    {% for day in weather_forecast %}
-        <div class="weather-card">
-            <div style="font-weight: bold; margin-bottom: 10px;">
-                {{ day['date'][:10] }} </div>
-            <div style="font-size: 25px;">📅</div>
-            <p>{{ day['temp'] }}°C</p>
-            <p style="font-size: 0.9em; opacity: 0.8;">{{ day['desc'] }}</p>
+
+    <div id="forecast-section">
+    {% if weather_forecast %}
+        <h2 style="margin-top: 40px; text-align: center;">Прогноз на 5 дней</h2>
+        <div class="weather-container">
+            {% for day in weather_forecast %}
+                <div class="weather-card">
+                    <p><strong>{{ day['date'] }}</strong></p>
+                    <div style="font-size: 30px;">🌡️</div>
+                    <p>{{ day['temp'] }}°C</p>
+                    <p>{{ day['desc'] }}</p>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-    {% if weather['main'] == 'Rain' %}
-    <div class="rain-drop" style="left: 10%;"></div>
-    <div class="rain-drop" style="left: 30%;"></div>
     {% endif %}
 </div>
-{% endif %}
 
+<script>
+    const locationBtn = document.getElementById('get-location');
+
+    locationBtn.addEventListener('click', () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                
+                fetch('/weather_by_coords', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lat: lat, lon: lon })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Ответ от сервера:", data);
+
+                    // 1. Скрываем прогноз, если он есть
+                    const forecast = document.getElementById('forecast-section');
+                    if (forecast) {
+                        forecast.style.display = 'none';
+                    }
+
+                    // 2. Обновляем все текстовые поля
+                    document.getElementById('city-name').textContent = `Погода в ${data.city}`;
+                    document.getElementById('temp-value').textContent = `${data.temp}°C`;
+                    document.getElementById('feels-like-value').textContent = `${data.feels_like}°C`;
+                    document.getElementById('weather-desc').textContent = data.desc;
+                    document.getElementById('humidity-value').textContent = `${data.humidity}%`;
+                    document.getElementById('wind-value').textContent = `${data.wind_speed} м/с`;
+                    
+                    // 3. Обновляем фон
+                    document.body.className = `bg-${data.main}`;
+                }) // <-- Закрыли блок .then(data => {
+                .catch(error => console.error('Ошибка:', error)); // Ловим ошибки fetch
+            }); // <-- Закрыли getCurrentPosition
+        } else {
+            alert("Геолокация не поддерживается вашим браузером");
+        }
+    }); // <-- Закрыли addEventListener
+</script>
 </body>
 </html>
