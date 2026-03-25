@@ -26,5 +26,12 @@ def weather_by_coords():
         # 3. Возвращаем результат обратно в браузер
     return jsonify(weather_by_coords)
 
+import subprocess
+import os
+
+# Этот код запустит бота как отдельный процесс прямо из Flask
+if os.environ.get('RENDER'): # Проверка, что мы на хостинге
+    subprocess.Popen(["python", "bot.py"])
+
 if __name__ == '__main__':
     app.run(debug=True)
