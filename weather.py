@@ -1,7 +1,7 @@
 import requests
 
 def get_weather(city = None, lat=None, lon=None):
-    api_key = '1679f5ca7ac79ae9838dc130c6e24a43'
+    api_key = 'XXXXXXXX'
     if lat and lon:
         # Если есть координаты, строим ссылку по ним
         url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric&lang=ru"
