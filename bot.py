@@ -4,8 +4,8 @@ from aiogram.filters import CommandStart
 import requests
 
 # ключи
-TELEGRAM_TOKEN = '8759591379:AAFSZY0DknHcilkDieRPw8yifOVS2nkoBAE'
-WEATHER_API_KEY = '1679f5ca7ac79ae9838dc130c6e24a43'
+TELEGRAM_TOKEN = 'XXXXXXXX'
+WEATHER_API_KEY = 'XXXXXXXX'
 
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher()
